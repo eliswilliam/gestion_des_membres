@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('members', function (Blueprint $table) {
             $table->id();
+            $table->string('numero_membre')->unique();
             $table->string('nom');
             $table->string('prenoms');
             $table->date('date_naissance');
@@ -23,7 +24,7 @@ return new class extends Migration
             $table->string('nationalite')->nullable();
             $table->string('situation_matrimoniale')->nullable();
             $table->text('adresse')->nullable();
-            $table->string('photo')->nullable(); // chemin stockage
+            $table->text('photo')->nullable(); // contenu photo en Base64
             $table->timestamps();
         });
     }

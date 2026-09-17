@@ -14,6 +14,7 @@ class Cotisation extends Model
 
     protected $fillable = [
         'member_id',
+        'numero_membre',
         'mois',
         'annee',
         'montant',

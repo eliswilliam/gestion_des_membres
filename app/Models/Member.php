@@ -11,6 +11,7 @@ class Member extends Model
     use HasFactory;
 
     protected $fillable = [
+        'numero_membre',
         'nom',
         'prenoms',
         'date_naissance',
@@ -33,6 +34,11 @@ class Member extends Model
     {
         if (!$this->photo) {
             return null;
+        }
+
+        // Si la photo est stockée en Base64 dans la base de données (Neon)
+        if (str_starts_with($this->photo, 'data:')) {
+            return $this->photo;
         }
 
         $disk = config('filesystems.default', 'public');

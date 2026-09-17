@@ -13,6 +13,7 @@ class Depense extends Model
 
     protected $fillable = [
         'member_id',
+        'numero_membre',
         'type_evenement',
         'montant',
         'date_depense',

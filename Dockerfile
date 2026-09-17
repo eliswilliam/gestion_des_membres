@@ -2,18 +2,20 @@ FROM php:8.2-apache
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng-dev libjpeg-dev libwebp-dev libfreetype6-dev libzip-dev \
-    zip unzip git curl libonig-dev libxml2-dev default-mysql-client \
+    zip unzip git curl libonig-dev libxml2-dev postgresql-client libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype \
-    && docker-php-ext-install -j$(nproc) pdo pdo_mysql mbstring exif pcntl bcmath gd zip
+    && docker-php-ext-install -j$(nproc) pdo pdo_pgsql pgsql mbstring exif pcntl bcmath gd zip
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
     && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
-    && a2enmod rewrite
+    && a2enmod rewrite \
+    && a2dismod mpm_event mpm_worker || true
+
 
 RUN sed -ri 's/^Listen 80$/Listen ${PORT}/' /etc/apache2/ports.conf \
     && sed -ri 's/<VirtualHost \*:80>/<VirtualHost *:${PORT}>/' /etc/apache2/sites-available/*.conf

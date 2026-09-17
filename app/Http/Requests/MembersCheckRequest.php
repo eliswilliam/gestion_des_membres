@@ -14,6 +14,7 @@ class MembersCheckRequest extends FormRequest
     public function rules()
     {
         return [
+            'numero_membre'         => 'required|string|max:255|unique:members',
             'nom'                   => 'required|string|max:255',
             'prenoms'               => 'required|string|max:255',
             'date_naissance'        => 'required|date',
@@ -31,6 +32,7 @@ class MembersCheckRequest extends FormRequest
     public function messages()
     {
         return [
+            'numero_membre.unique'           => 'Le numéro de membre est déjà utilisé.',
             'nom.required'                  => 'Le nom est obligatoire.',
             'prenoms.required'              => 'Les prénoms sont obligatoires.',
             'date_naissance.required'       => 'La date de naissance est obligatoire.',

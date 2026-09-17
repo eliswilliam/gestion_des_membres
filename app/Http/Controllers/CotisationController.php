@@ -36,7 +36,7 @@ class CotisationController extends Controller
         }
 
         $members = Member::orderBy('nom')->get();
-        $memberId = $request->membre_id; // correspond à la base
+        $memberId = $request->member_id;
 
         return view('cotisations.create', compact('members', 'memberId'));
     }

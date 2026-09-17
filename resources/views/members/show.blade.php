@@ -21,7 +21,8 @@
             </h1>
         </div>
         <div class="member-badge">
-            #{{ $member->id }}
+            <!-- #{{ $member->id }} -->
+           <strong> <span class="badge-text">N° {{ $member->numero_membre }}</span></strong>
         </div>
     </div>
 

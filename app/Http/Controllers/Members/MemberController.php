@@ -40,7 +40,7 @@ class MemberController extends Controller
 
         
         if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('members', config('filesystems.default'));
+            $data['photo'] = $this->storePhoto($request->file('photo'));
         }
 
         Member::create($data);
@@ -78,7 +78,8 @@ class MemberController extends Controller
         $member = Member::findOrFail($id);
         $data = $request->all();
         if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('members', config('filesystems.default'));
+            $this->deletePhoto($member->photo);
+            $data['photo'] = $this->storePhoto($request->file('photo'));
         }
         $member->update($data);
         return redirect()->route('members.show', $member->id)->with('success', 'Membre mis à jour.');
@@ -94,15 +95,35 @@ class MemberController extends Controller
 
         $member = Member::findOrFail($id);
 
-        // Supprimer la photo si elle existe
-        $disk = config('filesystems.default');
-        if ($member->photo && Storage::disk($disk)->exists($member->photo)) {
-            Storage::disk($disk)->delete($member->photo);
-        }
+        $this->deletePhoto($member->photo);
 
         $member->delete();
 
         return redirect()->route('members.index')
             ->with('success', 'Membre supprimé avec succès !');
+    }
+
+    private function storePhoto(\Illuminate\Http\UploadedFile $file): string
+    {
+        // Encoder l'image directement en Base64
+        $extension = $file->getClientOriginalExtension() ?: 'jpeg';
+        $data = base64_encode(file_get_contents($file->getRealPath()));
+        return "data:image/{$extension};base64,{$data}";
+    }
+
+    private function deletePhoto(?string $path): void
+    {
+        if (!$path) {
+            return;
+        }
+
+        // Plus rien à supprimer physiquement si l'image est stockée en Base64 dans la base de données.
+        // Si c'est un ancien chemin de fichier physique (pour compatibilité) :
+        if (!str_starts_with($path, 'data:')) {
+            $disk = config('filesystems.default');
+            if (Storage::disk($disk)->exists($path)) {
+                Storage::disk($disk)->delete($path);
+            }
+        }
     }
 }

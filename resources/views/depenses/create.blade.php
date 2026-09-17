@@ -25,21 +25,9 @@
     </div>
 
     @if($errors->any())
-        <div class="alert-error">
-            <div class="alert-header">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
-                <span>Veuillez corriger les erreurs suivantes :</span>
-            </div>
-            <ul class="error-list">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+        @foreach($errors->all() as $error)
+            <script>document.addEventListener('DOMContentLoaded', function() { showToast('{{ $error }}', 'error'); });</script>
+        @endforeach
     @endif
 
     <div class="form-card">

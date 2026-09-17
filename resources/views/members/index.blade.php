@@ -27,17 +27,6 @@
         @endif
     </div>
 
-    {{-- Message succès --}}
-    @if(session('success'))
-        <div class="alert-success">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-            </svg>
-            {{ session('success') }}
-        </div>
-    @endif
-
     <!-- Filtres uniquement -->
     <div class="filters-section">
         <div class="search-box">
@@ -63,7 +52,8 @@
         <table class="members-table">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <!-- <th>#</th> -->
+                    <th>Numéro de membre</th>
                     <th>Photo</th>
                     <th>Nom & Prénoms</th>
                     <th>Date de naissance</th>
@@ -75,7 +65,8 @@
             <tbody>
                 @forelse($members as $member)
                     <tr class="member-row" data-member-id="{{ $member->id }}">
-                        <td data-label="#"> {{ $loop->iteration }}</td>
+                        <!-- <td data-label="#"> {{ $loop->iteration }}</td> -->
+                        <td data-label="Numéro de membre"><strong>N° {{ $member->numero_membre }}</strong></td>
 
                         <td data-label="Photo" class="text-center">
                             @if($member->photo)
